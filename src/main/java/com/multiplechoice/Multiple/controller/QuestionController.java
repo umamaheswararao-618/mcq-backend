@@ -183,8 +183,19 @@ public class QuestionController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         }
 
+
         if (u.getPassword().equals(user.getPassWord())) {
+            VerifyUser v=questionService.FindVerifyUser(user.getId());
+            if(v!=null && u.getRoll().equals("admin") && v.getAccept().equals("true"))
             return ResponseEntity.ok(""+user.getId());
+            else
+            {
+                if(v==null && u.getRoll().equals("user"))
+                    return ResponseEntity.ok(""+user.getId());
+                else
+                    return ResponseEntity.status(HttpStatus.CONFLICT).body("need Permision As admin");
+
+            }
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
         }
